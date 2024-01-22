@@ -14,6 +14,6 @@ Adds a big red button unlockable to the ship in Lethal Company
 ### Instructions
 
 After downloading and installing the required mods,
-unzip Plugin.zip and place the BigRedButton folder inside your
-`Lethal Company\BepInEx\plugins` folder.
+unzip BigRedButton.zip and place the place the BigRedButton folder 
+inside your `Lethal Company\BepInEx\plugins` folder.
 
