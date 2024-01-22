@@ -35,9 +35,27 @@ namespace BigRedButton
             _logger = BepInEx.Logging.Logger.CreateLogSource(modGUID);
 
             string assetDir = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "BigRedButton");
+
             AssetBundle bundle = AssetBundle.LoadFromFile(assetDir);
 
             GameObject bigRedButtonPrefab = bundle.LoadAsset<GameObject>("Assets/BigRedButton/BigRedButton.prefab");
+            
+            BigRedButtonController script = bigRedButtonPrefab.AddComponent<BigRedButtonController>();
+            AudioClip[] clips = [
+                bundle.LoadAsset<AudioClip>("Assets/BigRedButton/bigredbutton.wav"),
+                bundle.LoadAsset<AudioClip>("Assets/BigRedButton/bigredbutton2.wav"),
+                bundle.LoadAsset<AudioClip>("Assets/BigRedButton/bigredbutton3.wav"),
+                bundle.LoadAsset<AudioClip>("Assets/BigRedButton/bigredbutton4.wav"),
+                bundle.LoadAsset<AudioClip>("Assets/BigRedButton/bigredbutton5.wav"),
+            ];
+            AudioClip specialClip = bundle.LoadAsset<AudioClip>("Assets/BigRedButton/bigredbuttonspecial.wav");
+            GameObject triggerObj = bigRedButtonPrefab.transform.Find("InteractTrigger").gameObject;
+            InteractTrigger trigger = triggerObj.GetComponent<InteractTrigger>();
+            script.audioClips = clips;
+            script.special = specialClip;
+            script.audioSource = triggerObj.GetComponent<AudioSource>();
+            script.trigger = trigger;
+
             NetworkPrefabs.RegisterNetworkPrefab(bigRedButtonPrefab);
 
             UnlockableItem val2 = new UnlockableItem();
@@ -56,6 +74,7 @@ namespace BigRedButton
             _logger.LogInfo("Loading unlockable: Big Red Button");
 
             _harmony.PatchAll(typeof(BigRedButton));
+            _harmony.PatchAll(typeof(BigRedButtonController));
             
 
             // Plugin startup logic
