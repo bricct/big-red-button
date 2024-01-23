@@ -19,7 +19,7 @@ namespace BigRedButton
 
         private const string modName = "Big Red Button";
         
-        private const string modVersion = "1.0.0";
+        private const string modVersion = "1.2.0";
 
         private readonly Harmony _harmony = new Harmony(modGUID);
 

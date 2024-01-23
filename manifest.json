@@ -1,6 +1,6 @@
 {
     "name": "BigRedButton",
-    "version_number": "1.1.0",
+    "version_number": "1.2.0",
     "website_url": "https://github.com/bricct/big-red-button",
     "description": "Adds a big red button to LethalCompany",
     "dependencies": [
