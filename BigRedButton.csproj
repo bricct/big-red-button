@@ -16,6 +16,13 @@
 		<PackageReference Include="UnityEngine.Modules" Version="2022.3.9" IncludeAssets="compile" />
 	</ItemGroup>
 
+	<ItemGroup>
+		<PackageReference Include="Evaisa.NetcodePatcher.MSBuild" Version="3.*" PrivateAssets="all" />
+	</ItemGroup>
+	<ItemGroup>
+		<NetcodePatch Include="$(TargetPath)" />
+	</ItemGroup>
+
 	<ItemGroup Condition="'$(TargetFramework.TrimEnd(`0123456789`))' == 'net'">
 		<PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.2" PrivateAssets="all" />
 	</ItemGroup>

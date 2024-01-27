@@ -3,52 +3,56 @@ using Unity.Netcode;
 using UnityEngine;
 using Random = System.Random;
 
-public class BigRedButtonController : NetworkBehaviour
+namespace BigRedButton.Behaviors
 {
-    public AudioClip[] audioClips;
-    public AudioClip special;
-    public AudioSource audioSource;
-    public InteractTrigger trigger;
-
-    private Random random = new Random();
-
-    void Start()
+    public class BigRedButtonController : NetworkBehaviour
     {
-        Debug.Log("subscribing to trigger event");
-        trigger.onInteract.AddListener(Trigger);
-    }
+        public AudioClip[] audioClips;
+        public AudioClip special;
+        public AudioSource audioSource;
+        public InteractTrigger trigger;
 
-    public void Trigger(PlayerControllerB player) => PlaySoundServerRpc();
+        private Random random = new Random();
 
-
-    [ServerRpc(RequireOwnership = false)]
-    public void PlaySoundServerRpc()
-    {
-        var playSpecial = random.Next(0, 100) < 4;
-        if (playSpecial)
+        void Start()
         {
-            Debug.Log("Special Event Triggered");
-            PlaySoundClientRpc(-1);
-        }
-        else
-        {
-            PlaySoundClientRpc(random.Next(0, audioClips.Length));
-        }
-    }
-
-    [ClientRpc]
-    public void PlaySoundClientRpc(int index)
-    {
-        AudioClip clip;
-        if (index == -1)
-        {
-            clip = special;
-        } else
-        {
-            clip = audioClips[index];
+            Debug.Log("subscribing to trigger event");
+            trigger.onInteract.AddListener(Trigger);
         }
 
-        audioSource.PlayOneShot(clip);
-        WalkieTalkie.TransmitOneShotAudio(audioSource, clip);
+        public void Trigger(PlayerControllerB player) => PlaySoundServerRpc();
+
+
+        [ServerRpc(RequireOwnership = false)]
+        public void PlaySoundServerRpc()
+        {
+            var playSpecial = random.Next(0, 100) < 4;
+            if (playSpecial)
+            {
+                Debug.Log("Special Event Triggered");
+                PlaySoundClientRpc(-1);
+            }
+            else
+            {
+                PlaySoundClientRpc(random.Next(0, audioClips.Length));
+            }
+        }
+
+        [ClientRpc]
+        public void PlaySoundClientRpc(int index)
+        {
+            AudioClip clip;
+            if (index == -1)
+            {
+                clip = special;
+            }
+            else
+            {
+                clip = audioClips[index];
+            }
+
+            audioSource.PlayOneShot(clip);
+            WalkieTalkie.TransmitOneShotAudio(audioSource, clip);
+        }
     }
 }

@@ -7,6 +7,8 @@ using UnityEngine;
 using LethalLib;
 using LethalLib.Modules;
 using System.Diagnostics;
+using Unity.Netcode;
+using BigRedButton.Behaviors;
 
 namespace BigRedButton
 {
@@ -19,7 +21,7 @@ namespace BigRedButton
 
         private const string modName = "Big Red Button";
         
-        private const string modVersion = "1.2.0";
+        private const string modVersion = "1.2.1";
 
         private readonly Harmony _harmony = new Harmony(modGUID);
 
@@ -56,7 +58,8 @@ namespace BigRedButton
             script.audioSource = triggerObj.GetComponent<AudioSource>();
             script.trigger = trigger;
 
-            NetworkPrefabs.RegisterNetworkPrefab(bigRedButtonPrefab);
+            LethalLib.Modules.NetworkPrefabs.RegisterNetworkPrefab(bigRedButtonPrefab);
+
 
             UnlockableItem val2 = new UnlockableItem();
             val2.unlockableName = "Big Red Button";
@@ -72,6 +75,22 @@ namespace BigRedButton
             info.displayText = "Only press in emergency situations";
             Unlockables.RegisterUnlockable(val2, StoreType.ShipUpgrade, null, null, info, 100);
             _logger.LogInfo("Loading unlockable: Big Red Button");
+
+
+            var types = Assembly.GetExecutingAssembly().GetTypes();
+            foreach (var type in types)
+            {
+                var methods = type.GetMethods(BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static);
+                foreach (var method in methods)
+                {
+                    var attributes = method.GetCustomAttributes(typeof(RuntimeInitializeOnLoadMethodAttribute), false);
+                    if (attributes.Length > 0)
+                    {
+                        method.Invoke(null, null);
+                    }
+                }
+            }
+            
 
             _harmony.PatchAll(typeof(BigRedButton));
             _harmony.PatchAll(typeof(BigRedButtonController));
